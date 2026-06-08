@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwu85Rz-181xDNgerxV6GdsYy3D9415JKhu_pN83awl1L2a9kK7xHQKaCB5fuP2BGcS/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyD06ilCnakXiDM7MU6lwJ04ZN8ln9icsWeJBWwISuW5LZxiaWX6zdZAUXAcQKM73g7/exec';
 const SECRET = 'weddingLK2026';
 
 export async function onRequestPost(context) {
