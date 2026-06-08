@@ -15,7 +15,6 @@ const TRACKS = [
   'assets/music2.mp3',
   'assets/music3.mp3',
   'assets/music4.mp3',
-  'assets/music5.mp3',
 ]
 
 @Component({
