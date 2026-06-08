@@ -22,6 +22,19 @@ function doGet(e) {
     if (!sheet) return jsonResponse({ found: false, error: 'sheet_not_found' });
     var data = sheet.getDataRange().getValues();
 
+    // Telegram повідомлення від Cloudflare Function
+    if (e.parameter.action === 'tg' && e.parameter.secret === 'weddingLK2026') {
+      var update = {
+        update_id: parseInt(e.parameter.updateId || '0'),
+        message: {
+          chat: { id: e.parameter.chatId },
+          text: e.parameter.text,
+        }
+      };
+      handleTelegramUpdate(update);
+      return jsonResponse({ ok: true });
+    }
+
     // Пошук по імені або коду для Telegram-бота
     var searchQuery = String((e.parameter && e.parameter.search) || '').toLowerCase().trim();
     if (searchQuery) {
@@ -239,6 +252,8 @@ function sendTelegramMessage(chatId, text, parseMode) {
 function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+
+function keepWarm() {}
 
 // Викликати кожну хвилину через тригер — замість webhook
 function processTelegramUpdates() {
