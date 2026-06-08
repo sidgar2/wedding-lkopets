@@ -1,5 +1,5 @@
 const BOT_TOKEN      = '8974707455:AAHVKFqQgfyZ9Ge5-AqRU02GMASlQZtDHwY';
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvhushP0Ubtn19UEHNcqhp-mWOpnz_bN9-jem8MYtq4OycpafZi5jgGsV8Yv8PzYPS/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztt_nJyy_GN8zTikOfAItS8cfii8BDfvEXOQtLE7yjnR3f9roR8ljaNLwOPEp8Uzg9/exec';
 const SITE_URL        = 'https://wedding-invitation-liubomyr-maryana.uk';
 
 const FEMALE_NAMES = ['юля', 'оксана', 'лора', 'інна', 'софія'];
