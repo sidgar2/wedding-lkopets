@@ -22,19 +22,6 @@ function doGet(e) {
     if (!sheet) return jsonResponse({ found: false, error: 'sheet_not_found' });
     var data = sheet.getDataRange().getValues();
 
-    // Telegram повідомлення від Cloudflare Function
-    if (e.parameter.action === 'tg' && e.parameter.secret === 'weddingLK2026') {
-      var update = {
-        update_id: parseInt(e.parameter.updateId || '0'),
-        message: {
-          chat: { id: e.parameter.chatId },
-          text: e.parameter.text,
-        }
-      };
-      handleTelegramUpdate(update);
-      return jsonResponse({ ok: true });
-    }
-
     // Пошук по імені або коду для Telegram-бота
     var searchQuery = String((e.parameter && e.parameter.search) || '').toLowerCase().trim();
     if (searchQuery) {
@@ -156,9 +143,9 @@ function getGreeting(name) {
 
 function handleTelegramUpdate(update) {
   var props    = PropertiesService.getScriptProperties();
-  var lastId   = parseInt(props.getProperty('last_update_id') || '0');
-  if (update.update_id <= lastId) return;
-  props.setProperty('last_update_id', String(update.update_id));
+  var lastId   = parseInt(props.getProperty('telegram_offset') || '0');
+  if (update.update_id < lastId) return;
+  props.setProperty('telegram_offset', String(update.update_id + 1));
 
   var msg = update.message;
   if (!msg || !msg.text) return;
@@ -181,8 +168,9 @@ function handleTelegramUpdate(update) {
     var dataLink = sheetLink.getDataRange().getValues();
     var missing = [];
     for (var k = 1; k < dataLink.length; k++) {
-      var colF = String(dataLink[k][5]).trim();
-      if (!colF) missing.push(String(dataLink[k][1]).trim());
+      var colF  = String(dataLink[k][5]).trim();
+      var nameF = String(dataLink[k][1]).trim();
+      if (!colF && nameF) missing.push(nameF);
     }
     if (missing.length === 0) {
       sendTelegramMessage(chatId, 'У всіх гостей є посилання ✅');
