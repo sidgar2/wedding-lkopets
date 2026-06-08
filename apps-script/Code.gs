@@ -66,7 +66,7 @@ function doPost(e) {
     var body = JSON.parse(e.postData.contents);
 
     // Telegram webhook
-    if (body.message !== undefined) {
+    if (body.message !== undefined || body.callback_query !== undefined) {
       handleTelegramUpdate(body);
       return jsonResponse({ ok: true });
     }
@@ -142,10 +142,43 @@ function getGreeting(name) {
 }
 
 function handleTelegramUpdate(update) {
-  var props    = PropertiesService.getScriptProperties();
-  var lastId   = parseInt(props.getProperty('telegram_offset') || '0');
+  var props  = PropertiesService.getScriptProperties();
+  var lastId = parseInt(props.getProperty('telegram_offset') || '0');
   if (update.update_id < lastId) return;
   props.setProperty('telegram_offset', String(update.update_id + 1));
+
+  // Клік по кнопці
+  if (update.callback_query) {
+    var cbq    = update.callback_query;
+    var cbChat = String(cbq.message.chat.id);
+    var cbCode = cbq.data;
+
+    answerCallbackQuery(cbq.id);
+
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('Guests');
+    var data = sheet.getDataRange().getValues();
+    var found = null;
+    for (var i = 1; i < data.length; i++) {
+      if (String(data[i][0]).trim() === cbCode) {
+        found = { code: String(data[i][0]).trim(), name: String(data[i][1]).trim() };
+        break;
+      }
+    }
+    if (!found) { sendTelegramMessage(cbChat, 'Гостя не знайдено.'); return; }
+
+    var url      = SITE_URL + '/?code=' + encodeURIComponent(found.code);
+    var greeting = getGreeting(found.name);
+    sendTelegramMessage(cbChat,
+      greeting + ' ' + escapeHtml(found.name) + '!\n' +
+      'З радістю запрошуємо вас стати частиною одного з важливих днів у нашому житті - нашого весілля💍\n' +
+      'Нижче ви знайдете наше весільне запрошення з усією необхідною інформацією.\n' +
+      'З нетерпінням чекаємо зустрічі та святкування разом з вами!\n\n' +
+      '<a href="' + url + '">Посилання</a>',
+      'HTML'
+    );
+    return;
+  }
 
   var msg = update.message;
   if (!msg || !msg.text) return;
@@ -159,23 +192,24 @@ function handleTelegramUpdate(update) {
   }
 
   if (query === '/link') {
-    var ssLink = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var ssLink    = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheetLink = ssLink.getSheetByName('Guests');
-    if (!sheetLink) {
-      sendTelegramMessage(chatId, 'Таблиця Guests не знайдена.');
-      return;
-    }
+    if (!sheetLink) { sendTelegramMessage(chatId, 'Таблиця Guests не знайдена.'); return; }
     var dataLink = sheetLink.getDataRange().getValues();
     var missing = [];
     for (var k = 1; k < dataLink.length; k++) {
       var colF  = String(dataLink[k][5]).trim();
       var nameF = String(dataLink[k][1]).trim();
-      if (!colF && nameF) missing.push(nameF);
+      var codeF = String(dataLink[k][0]).trim();
+      if (!colF && nameF && codeF) missing.push({ name: nameF, code: codeF });
     }
     if (missing.length === 0) {
       sendTelegramMessage(chatId, 'У всіх гостей є посилання ✅');
     } else {
-      sendTelegramMessage(chatId, 'Гості без посилання (' + missing.length + '):\n\n' + missing.join('\n'));
+      var keyboard = missing.map(function(g) {
+        return [{ text: g.name, callback_data: g.code }];
+      });
+      sendWithKeyboard(chatId, 'Гості без посилання (' + missing.length + '):', keyboard);
     }
     return;
   }
@@ -232,6 +266,36 @@ function sendTelegramMessage(chatId, text, parseMode) {
       method: 'post',
       contentType: 'application/json',
       payload: JSON.stringify(payload),
+      muteHttpExceptions: true,
+    }
+  );
+}
+
+function sendWithKeyboard(chatId, text, keyboard) {
+  if (!TELEGRAM_BOT_TOKEN) return;
+  UrlFetchApp.fetch(
+    'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage',
+    {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({
+        chat_id: chatId,
+        text: text,
+        reply_markup: { inline_keyboard: keyboard },
+      }),
+      muteHttpExceptions: true,
+    }
+  );
+}
+
+function answerCallbackQuery(callbackQueryId) {
+  if (!TELEGRAM_BOT_TOKEN) return;
+  UrlFetchApp.fetch(
+    'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/answerCallbackQuery',
+    {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ callback_query_id: callbackQueryId }),
       muteHttpExceptions: true,
     }
   );
