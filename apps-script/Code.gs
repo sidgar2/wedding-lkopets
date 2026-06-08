@@ -13,33 +13,41 @@ function jsonResponse(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// GET ?code=xxxxxx → повертає дані гостя або { found: false }
+// GET ?code=xxxxxx → повертає дані гостя
+// GET ?search=NAME  → повертає список знайдених гостей
 function doGet(e) {
   try {
-    var code = String((e.parameter && e.parameter.code) || '').toLowerCase().trim();
-
-    if (!CODE_REGEX.test(code)) {
-      return jsonResponse({ found: false, error: 'invalid_code' });
-    }
-
     var ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheet = ss.getSheetByName('Guests');
-
-    if (!sheet) {
-      return jsonResponse({ found: false, error: 'sheet_not_found' });
-    }
-
+    if (!sheet) return jsonResponse({ found: false, error: 'sheet_not_found' });
     var data = sheet.getDataRange().getValues();
 
-    for (var i = 1; i < data.length; i++) {
-      var rowCode = String(data[i][0]).toLowerCase().trim();
-      if (rowCode === code) {
+    // Пошук по імені або коду для Telegram-бота
+    var searchQuery = String((e.parameter && e.parameter.search) || '').toLowerCase().trim();
+    if (searchQuery) {
+      var results = [];
+      for (var i = 1; i < data.length; i++) {
+        var rowCode = String(data[i][0]).toLowerCase().trim();
+        var rowName = String(data[i][1]).toLowerCase().trim();
+        if (rowCode === searchQuery || rowName.indexOf(searchQuery) !== -1) {
+          results.push({ code: String(data[i][0]).trim(), name: String(data[i][1]).trim() });
+        }
+      }
+      return jsonResponse({ results: results });
+    }
+
+    // Пошук по коду для сайту
+    var code = String((e.parameter && e.parameter.code) || '').toLowerCase().trim();
+    if (!CODE_REGEX.test(code)) return jsonResponse({ found: false, error: 'invalid_code' });
+
+    for (var j = 1; j < data.length; j++) {
+      if (String(data[j][0]).toLowerCase().trim() === code) {
         return jsonResponse({
           found: true,
           guest: {
-            code:       String(data[i][0]),
-            name:       String(data[i][1]),
-            multiTrack: String(data[i][3]).trim().toLowerCase() === 'yes',
+            code:       String(data[j][0]),
+            name:       String(data[j][1]),
+            multiTrack: String(data[j][3]).trim().toLowerCase() === 'yes',
           }
         });
       }
