@@ -1,0 +1,41 @@
+<app-card>
+  <div animView #v="v" [@staggerFade]="v.state()" class="flex flex-col gap-5">
+    <app-section-title text="Місце проведення" />
+
+    <div class="anim flex flex-col gap-4 justify-center">
+      <div class="flex flex-col gap-2 font-serif text-mocha">
+        <span class="flex justify-center uppercase"><span class="font-bold pr-1">Шлюб </span> відбудеться у</span>
+        <span class="flex justify-center">Храмі Всіх Святих Українського Народу УГКЦ</span>
+        <span class="flex flex-wrap justify-center" style="align-items: center"><img style="height: 18px" src="assets/loc.png" alt="">вулиця Симона Петлюри, 32, Львів</span>
+        <span class="flex justify-center">
+          <a
+            appButton
+            variant="ghost"
+            href="https://maps.google.com/?q=49.81891929840448,23.980717313402224"
+            target="_blank"
+            rel="noopener"
+            class="self-start mt-1"
+          >Відкрити карту</a>
+        </span>
+      </div>
+
+      <div class="w-full h-px bg-muted/10"></div>
+
+      <div class="flex flex-col gap-2 font-serif text-mocha">
+        <span class="flex justify-center uppercase"><span class="font-bold pr-1">Святкування </span> відбудеться у</span>
+        <span class="flex justify-center">Park. Art of Rest</span>
+        <span class="flex flex-wrap justify-center" style="align-items: center"><img style="height: 18px" src="assets/loc.png" alt="">вулиця Героїв Майдану, 43А, Львів</span>
+        <span class="flex justify-center">
+          <a
+            appButton
+            variant="ghost"
+            href="https://maps.google.com/?q=49.829454464642076,24.021177681291366"
+            target="_blank"
+            rel="noopener"
+            class="self-start mt-1"
+          >Відкрити карту</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</app-card>

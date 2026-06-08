@@ -1,1 +1,88 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Marianna';
+  src: url('/assets/font/marianna.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalissa';
+  src: url('/assets/font/KalissaRegular_0.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalissa Swashes';
+  src: url('/assets/font/KalissaSwashes_0.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Atziluth';
+  src: url('/assets/font/Atziluth-Script_1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noteworthy Light';
+  src: url('/assets/font/Noteworthy-Light_0.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg-base: #E8DDD0;
+  --bg-card: #FFFFFF;
+  --accent: #A67C52;
+  --accent-soft: #C9A57E;
+  --text-primary: #542E1D;
+  --text-secondary: #542E1D;
+  --shadow-soft: 0 4px 24px rgba(60, 40, 20, 0.06);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { display: block; max-width: 100%; }
+
+/* ── Form inputs ─────────────────────────────────── */
+.wedding-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #E5C5A8;
+  border-radius: 12px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+  font-size: 0.88rem;
+  color: #542E1D;
+  background: #FDFAF7;
+  transition: border-color 0.2s;
+  outline: none;
+  resize: none;
+  -webkit-appearance: none;
+}
+.wedding-input:focus  { border-color: #C9A57E; }
+.wedding-input::placeholder { color: #C9A57E; font-weight: 300; }
+.wedding-input:disabled { opacity: 0.55; cursor: not-allowed; }

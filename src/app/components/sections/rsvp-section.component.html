@@ -1,0 +1,70 @@
+<app-card>
+  <div animView #v="v" [@staggerFade]="v.state()" class="flex flex-col gap-5">
+    <app-section-title text="Підтвердження" />
+
+    @if (submitted()) {
+      <div @formSwap class="flex flex-col items-center gap-4 text-center py-4">
+        <span class="text-4xl">🎉</span>
+        <p class="font-serif text-mocha text-lg">Дякуємо!</p>
+        <p class="text-lg text-mocha/60 font-serif leading-relaxed">
+          Ми отримали ваше підтвердження<br />та чекаємо на вас.
+        </p>
+      </div>
+    } @else {
+      <form @formSwap (ngSubmit)="submit()" class="flex flex-col gap-4">
+        <app-form-field label="Ваше ім'я" [error]="nameError()">
+          <input
+            class="wedding-input"
+            type="text"
+            placeholder="Ім'я та прізвище"
+            [(ngModel)]="name"
+            name="name"
+            autocomplete="name"
+            (input)="nameError.set('')"
+          />
+        </app-form-field>
+
+        <app-form-field label="Відвідування">
+          <app-radio-pills
+            [options]="attendanceOptions"
+            [(value)]="attendance"
+          />
+        </app-form-field>
+
+        @if (attendance() === 'yes' || attendance() === 'maybe') {
+          <app-form-field label="Кількість гостей">
+            <div class="pt-1">
+              <app-stepper
+                [(value)]="guestCount"
+                [min]="1"
+              />
+            </div>
+          </app-form-field>
+        }
+
+        <app-form-field label="Побажання (необов'язково)">
+          <textarea
+            class="wedding-input resize-none"
+            rows="3"
+            placeholder="Ваші побажання молодятам..."
+            [(ngModel)]="wishes"
+            name="wishes"
+          ></textarea>
+        </app-form-field>
+
+        @if (serverError()) {
+          <p class="text-xs text-rose-500">{{ serverError() }}</p>
+        }
+
+        <button
+          appButton
+          type="submit"
+          [disabled]="loading()"
+          class="anim w-full"
+        >
+          {{ loading() ? 'Надсилаємо...' : 'Надіслати' }}
+        </button>
+      </form>
+    }
+  </div>
+</app-card>

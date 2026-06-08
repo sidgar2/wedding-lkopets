@@ -1,0 +1,41 @@
+<app-card [noPadding]="true">
+  <div animView #v="v" [@staggerFade]="v.state()" class="flex flex-col gap-8">
+    <app-section-title text="Дрес-код" />
+
+    <p class="anim font-serif text-lg text-mocha/70 text-center leading-relaxed">
+      Для нас буде дуже цінно,<br/>
+      якщо ви підтримаєте атмосферу нашого свята<br/>
+      та оберете образи у кольорах нашого весілля
+    </p>
+
+    <div class="anim flex gap-3 justify-center">
+      <span class="w-14 h-14 rounded-full shadow-sm" style="background:#2D1910"></span>
+      <span class="w-14 h-14 rounded-full shadow-sm" style="background:#542E1D"></span>
+      <span class="w-14 h-14 rounded-full shadow-sm" style="background:#9D6F51"></span>
+      <span class="w-14 h-14 rounded-full shadow-sm" style="background:#C9916D"></span>
+      <span class="w-14 h-14 rounded-full shadow-sm" style="background:#E9D4C3"></span>
+    </div>
+
+    <div class="anim flex flex-col overflow-hidden rounded-xl">
+      @for (row of rows; track $index; let rowIdx = $index) {
+        <div class="flex" [style.margin-top]="rowIdx > 0 ? '-25%' : '0'" [style.position]="'relative'" [style.z-index]="rowIdx">
+          @for (photo of row; track $index; let col = $index) {
+            <img
+              [src]="'assets/' + photo"
+              [alt]="'Гість ' + photo"
+              class="block"
+              [style.width.%]="200 / row.length"
+              [style.margin-left]="col > 0 ? '-25%' : '0'"
+              [style.z-index]="col"
+              [style.position]="'relative'"
+            />
+          }
+        </div>
+      }
+    </div>
+
+    <p class="anim text-s text-mocha text-center">
+      Будь ласка, уникайте яскравих кольорів.
+    </p>
+  </div>
+</app-card>

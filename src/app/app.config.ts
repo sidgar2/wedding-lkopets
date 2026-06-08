@@ -1,11 +1,11 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
-
-import { routes } from './app.routes';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core'
+import { provideAnimations } from '@angular/platform-browser/animations'
+import { ArrowRight, Heart, LucideAngularModule, LUCIDE_ICONS } from 'lucide-angular'
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(routes)
-  ]
-};
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideAnimations(),
+    { provide: LUCIDE_ICONS, useValue: [ArrowRight, Heart], multi: true },
+  ],
+}

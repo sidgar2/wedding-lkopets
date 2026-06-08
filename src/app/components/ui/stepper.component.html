@@ -1,0 +1,15 @@
+<div class="flex items-center gap-4">
+  <button
+    type="button"
+    class="w-9 h-9 rounded-full border border-mocha/30 text-mocha flex items-center justify-center text-lg leading-none transition hover:bg-muted/5 disabled:opacity-30"
+    [disabled]="value() <= min()"
+    (click)="decrement()"
+  >−</button>
+  <span class="w-6 text-center font-serif text-xl text-mocha">{{ value() }}</span>
+  <button
+    type="button"
+    class="w-9 h-9 rounded-full border border-mocha/30 text-mocha flex items-center justify-center text-lg leading-none transition hover:bg-muted/5 disabled:opacity-30"
+    [disabled]="value() >= max()"
+    (click)="increment()"
+  >+</button>
+</div>

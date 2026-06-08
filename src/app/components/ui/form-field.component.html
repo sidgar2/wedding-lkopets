@@ -1,0 +1,9 @@
+<div class="flex flex-col gap-1">
+  @if (label()) {
+    <label class="text-xs font-medium text-mocha/60 uppercase tracking-wider">{{ label() }}</label>
+  }
+  <ng-content />
+  @if (error()) {
+    <p [@errorFade] class="text-xs text-rose-500 mt-0.5">{{ error() }}</p>
+  }
+</div>

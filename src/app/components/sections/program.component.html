@@ -1,0 +1,23 @@
+<app-card>
+  <div animView #v="v" [@staggerFade]="v.state()" class="flex flex-col gap-8">
+    <app-section-title text="Програма" />
+
+    <ol class="anim flex flex-col items-center gap-8">
+      @for (item of program; track item.time; let last = $last) {
+        <li class="flex flex-col items-center gap-2 text-center">
+
+          <div class="w-14 h-14 flex items-center justify-center text-mocha">
+            <img [src]="`assets/${item.icon}.png`" alt=""/>
+          </div>
+
+          <span class="text-s tracking-widest text-mocha font-medium uppercase">{{ item.time }}</span>
+          <p class="font-serif text-mocha text-lg">{{ item.title }}</p>
+        </li>
+
+        @if (!last) {
+          <li aria-hidden="true" class="w-px h-8 bg-muted/20"></li>
+        }
+      }
+    </ol>
+  </div>
+</app-card>

@@ -1,59 +1,63 @@
-# Wed
+# Весільний сайт · Любомир та Маряна · 28.08.2026
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.12.
+React + TypeScript + Vite + Tailwind CSS + Framer Motion
 
-## Development server
-
-To start a local development server, run:
+## Запуск
 
 ```bash
-ng serve
+npm install
+npm run dev
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Відкрити: http://localhost:5173
 
-## Code scaffolding
+## Заміна зображень
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Всі плейсхолдери знаходяться в `public/images/`. Замініть їх реальними фото, зберігаючи ті самі імена файлів (або оновіть src у компонентах).
+
+| Файл | Де використовується | Рекомендовані пропорції |
+|---|---|---|
+| `hero.jpg` | Головне фото (Hero) | 2:3 (портрет) |
+| `venue-1.jpg` | Фото ресторану 1 | 1:1 (квадрат) |
+| `venue-2.jpg` | Фото ресторану 2 | 1:1 (квадрат) |
+| `dress-1.jpg` … `dress-6.jpg` | Приклади образів | 3:4 (портрет) |
+| `flowers.jpg` | Фото квітів (Farewell) | 16:9 або ширше |
+
+Після заміни оновіть розширення в src атрибутах:
+- `Hero.tsx` → `/images/hero.svg` → `/images/hero.jpg`
+- `Venue.tsx` → venue-1.svg / venue-2.svg → .jpg
+- `DressCode.tsx` → dress-1.svg … dress-6.svg → .jpg
+- `Farewell.tsx` → flowers.svg → .jpg
+
+## Що замінити в коді
+
+| Файл | Що змінити |
+|---|---|
+| `src/components/sections/Venue.tsx` | Адреса ресторану + посилання на Google Maps |
+| `src/components/sections/Contacts.tsx` | Телефон та ім'я організатора |
+| `src/components/sections/RSVP.tsx` | href кнопки «Заповнити» → посилання на форму |
+
+## Структура проєкту
+
+```
+src/
+  components/
+    sections/   Hero · Invitation · Venue · Program · DressCode · Wishes · RSVP · Contacts · Farewell
+    ui/         Button · Card · SectionTitle
+  lib/
+    animations.ts   Framer Motion варіанти (fadeInUp, staggerContainer)
+  styles/
+    globals.css     CSS змінні + Tailwind directives
+  App.tsx           3-колонковий лейаут (≥1024px) / single-column (mobile)
+  main.tsx
+public/
+  images/           всі зображення (SVG плейсхолдери)
+```
+
+## Збірка для продакшену
 
 ```bash
-ng generate component component-name
+npm run build
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Результат у папці `dist/`.

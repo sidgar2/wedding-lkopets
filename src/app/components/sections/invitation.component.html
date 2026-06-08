@@ -1,0 +1,94 @@
+<app-card>
+  <div animView #v="v" [@staggerFade]="v.state()" class="flex flex-col gap-7 text-center">
+
+    <p class="anim font-serif text-base text-mocha leading-relaxed">
+      Все почалось із простого "привіт",<br />
+      а перетворилось у історію,<br />
+      яку ми хочемо прожити разом назавжди.
+    </p>
+
+    <p class="anim font-serif text-l text-mocha leading-relaxed">
+      Ми сміялись, мріяли, проходили різні моменти разом<br />
+      і зрозуміли — любов стає справжньою тоді,<br />
+      коли хочеться тримати за руку одну й ту саму людину все життя.
+    </p>
+
+    <p class="anim font-script text-4xl text-mocha leading-none">28.08.26</p>
+
+    <p class="anim font-serif text-l text-mocha leading-relaxed">
+      Це буде день про любов, щирі емоції,<br />
+       обійми, сміх і початок нашої нової історії.
+
+    </p>
+
+    <p class="anim font-serif text-l text-mocha leading-relaxed">
+      І нам буде дуже цінно,<br />
+      якщо ви проживете його разом з нами
+    </p>
+
+    <!-- Calendar -->
+    <div class="anim p-4 rounded-2xl  ">
+      <p class="text-[16px] font-serif text-mocha text-center mb-3 tracking-widest uppercase">
+        Серпень 2026
+      </p>
+      <div class="grid grid-cols-7 text-center">
+        <span class="text-[12px] text-mocha pb-1.5">Пн</span>
+        <span class="text-[12px] text-mocha pb-1.5">Вт</span>
+        <span class="text-[12px] text-mocha pb-1.5">Ср</span>
+        <span class="text-[12px] text-mocha pb-1.5">Чт</span>
+        <span class="text-[12px] text-mocha pb-1.5">Пт</span>
+        <span class="text-[12px] text-mocha pb-1.5">Сб</span>
+        <span class="text-[12px] text-mocha pb-1.5">Нд</span>
+        @for (week of calendarWeeks; track $index) {
+          @for (day of week; track $index) {
+            <div class="flex items-center justify-center py-0.5">
+              @if (day !== null) {
+                @if (day === 28) {
+                  <span class="relative w-12 h-12 flex items-center justify-center text-xs font-semibold text-cream z-10">
+                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 24 24" fill="#542E1D" style="color: #542E1D">
+                      <path d="M12 21C12 21 3 13.5 3 8a4 4 0 0 1 7.2-2.4L12 7.5l1.8-1.9A4 4 0 0 1 21 8c0 5.5-9 13-9 13z"/>
+                    </svg>
+                    <span class="relative z-10">28</span>
+                  </span>
+                } @else {
+                  <span class="w-6 h-6 flex items-center justify-center text-l text-mocha">{{ day }}</span>
+                }
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <p class="mt-5 anim text-2xl text-mocha uppercase font-bold">До весілля залишилось:</p>
+
+    <div class="anim flex justify-center gap-2">
+      @for (unit of [
+        { value: countdown().days,    label: 'днів' },
+        { value: countdown().hours,   label: 'год' },
+        { value: countdown().minutes, label: 'хв' },
+        { value: countdown().seconds, label: 'сек' }
+      ]; track unit.label; let last = $last) {
+        <div class="flex flex-col items-center gap-1">
+          <span class="text-4xl text-mocha leading-none">{{ unit.value.toString().padStart(2, '0') }}</span>
+          <span class="text-xs text-mocha/60 font-serif">{{ unit.label }}</span>
+        </div>
+        @if (!last) {
+          <span class="text-4xl text-mocha/40 leading-none self-start pt-0.5">:</span>
+        }
+      }
+    </div>
+    <div class="anim flex gap-3">
+      <div class="flex flex-col items-center justify-center gap-1 p-3 flex-1">
+        <div class="rounded-2xl overflow-hidden flex-1 min-h-[90px] shadow-[0_8px_32px_rgba(84,46,29,0.35)]">
+          <img
+            src="assets/hero3.PNG"
+            alt="Любомир та Маряна"
+            class="anim w-full h-full object-cover object-top"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</app-card>

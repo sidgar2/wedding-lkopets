@@ -1,0 +1,26 @@
+<app-card>
+  <div animView #v="v" [@staggerFade]="v.state()" class="flex flex-col gap-5">
+    <app-section-title text="Контакти" />
+
+    <p class="anim font-serif text-lg text-mocha/70 text-center leading-relaxed">
+      Якщо виникнуть питання — звертайтесь до наших організаторів.
+    </p>
+
+    <div class="anim flex flex-col gap-3">
+      @for (c of contacts; track c.phone) {
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="font-serif text-mocha">{{ c.name }}</p>
+            <p class="text-xs text-mocha/50">{{ c.role }}</p>
+          </div>
+          <a
+            appButton
+            variant="ghost"
+            [href]="'tel:' + c.phone"
+            class="!px-4 !py-2 !text-xs"
+          >{{ c.phone }}</a>
+        </div>
+      }
+    </div>
+  </div>
+</app-card>

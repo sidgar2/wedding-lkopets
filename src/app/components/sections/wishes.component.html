@@ -1,0 +1,77 @@
+<app-card>
+  <div animView #v="v" [@staggerFade]="v.state()" class="flex flex-col gap-5 text-center">
+    <app-section-title text="Побажання" />
+
+    <p class="anim font-serif text-lg text-mocha/70 leading-relaxed  pr-6 pl-6">
+      Найцінніше для нас — це ваша присутність<br />
+      у наш день.
+    </p>
+
+    <p class="anim font-serif text-lg text-mocha/70 leading-relaxed  pr-6 pl-6">
+      Ми не вживаємо алкоголю, а квіти, на жаль, дуже швидко зів'януть,
+      тим більше що одразу після весілля ми вирушаємо у медову подорож.
+      Тому будемо безмежно вдячні, якщо замість квітів чи алкоголю ви принесете
+      корм або інші необхідні речі для притулку «Домівка врятованих тварин».
+    </p>
+
+    <button
+      class="anim mx-auto px-6 py-2.5 rounded-full text-cream text-sm font-semibold tracking-wide transition-all active:scale-95"
+      style="background:#542E1D"
+      (click)="open.set(true)"
+    >
+      Потреби для хвостиків
+    </button>
+
+    @if (open()) {
+      <div
+        class="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40"
+        (click)="open.set(false)"
+      >
+        <div
+          class="relative bg-cream rounded-2xl shadow-2xl w-full max-w-sm max-h-[80vh] overflow-y-auto p-6 text-left"
+          (click)="$event.stopPropagation()"
+        >
+          <button
+            class="absolute top-3 right-4 text-mocha/50 hover:text-mocha text-2xl leading-none"
+            (click)="open.set(false)"
+          >&#x2715;</button>
+
+          <p class="font-semibold text-mocha mb-4 text-base">Список базових і завжди актуальних потреб:</p>
+
+          <p class="font-semibold text-mocha mt-3 mb-1">Харчування:</p>
+          <ul class="text-mocha/80 text-sm space-y-1 list-none">
+            <li>— Корм сухий для котів та собак (Клуб 4 лапи)</li>
+            <li>— Смаколики для собак/котів (на ваш вибір)</li>
+            <li>— Корм для гризунів</li>
+            <li>— Корм для папуг</li>
+            <li>— Зерно (кукурудза, овес, пшениця, просо, жито, насіння соняшника, гречка, рис, пшоно)</li>
+            <li>— Горіхи (грецькі, арахіс, фундук)</li>
+            <li>— Сухофрукти (курага, фініки)</li>
+          </ul>
+
+          <p class="font-semibold text-mocha mt-4 mb-1">Обробки від паразитів:</p>
+          <p class="text-mocha/80 text-sm">Для собак: Сімпаріка, Бравекто, Каніквантель+</p>
+          <p class="text-mocha/80 text-sm">Для котів: Адвокат, Адвантейдж, Каніквантель, Профендер</p>
+
+          <p class="font-semibold text-mocha mt-4 mb-1">Загальне:</p>
+          <ul class="text-mocha/80 text-sm space-y-1 list-none">
+            <li>— Пелюшки</li>
+            <li>— Лежаки (собачі, котячі)</li>
+            <li>— Миски металеві</li>
+            <li>— Дряпалки для котів, м'ячики, канати, інші іграшки</li>
+            <li>— Наповнювач для лотків (дерев'яний), тирса</li>
+          </ul>
+        </div>
+      </div>
+    }
+
+    <p class="anim font-serif text-lg text-mocha/70 leading-relaxed  pr-6 pl-6">
+      Для нас це буде особливий подарунок, адже разом із вами ми зможемо
+      подарувати трохи турботи і тепла тим, хто дуже цього потребує.<br /><br />
+      Нехай частинка радості нашого свята стане допомогою для хвостиків,
+      які чекають на любов 🐾
+    </p>
+
+    <img src="assets/shelby.jpg" alt=""/>
+  </div>
+</app-card>

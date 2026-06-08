@@ -1,0 +1,12 @@
+<div class="flex flex-wrap gap-2">
+  @for (opt of options(); track opt.value) {
+    <button
+      type="button"
+      class="px-4 py-2 rounded-full border text-sm transition-all duration-200"
+      [ngClass]="value() === opt.value
+        ? 'bg-mocha text-cream border-mocha'
+        : 'border-mocha/30 text-mocha hover:bg-muted/5'"
+      (click)="value.set(opt.value)"
+    >{{ opt.label }}</button>
+  }
+</div>

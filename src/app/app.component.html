@@ -1,0 +1,48 @@
+<app-music-player />
+
+@if (locked()) {
+  <div class="fixed inset-0 z-[200] flex flex-col items-center justify-center backdrop-blur-md bg-mocha/30">
+
+    <div class="flex flex-col items-center mt-32" style="font-family: 'Atziluth', cursive; font-size: 3.5rem; line-height: 1.2">
+      @for (line of LINES; track $index) {
+        <div class="relative">
+          <span class="invisible select-none whitespace-nowrap" aria-hidden="true">{{ line }}</span>
+          <span class="absolute inset-0 text-cream whitespace-nowrap overflow-hidden">{{ typedLines()[$index] ?? '' }}</span>
+        </div>
+      }
+    </div>
+
+    <img
+      src="assets/heart.png"
+      alt=""
+      class="w-20 h-20 object-contain mt-32 transition-all duration-700"
+      [style.opacity]="showHeart() ? '1' : '0'"
+      [style.transform]="showHeart() ? 'scale(1)' : 'scale(0.5)'"
+      (click)="unlock()"
+    />
+
+    <p
+      class="text-cream uppercase mt-8 transition-all duration-700 cursor-pointer"
+      style="font-weight: bold; font-size: 0.8rem; letter-spacing: 0.05em"
+      [style.opacity]="showSubtext() ? '1' : '0'"
+      [style.transform]="showSubtext() ? 'translateY(0)' : 'translateY(8px)'"
+    >
+      Натисніть, щоб відкрити запрошення
+    </p>
+
+  </div>
+}
+
+<div class="min-h-screen bg-base">
+  <main>
+    <div class="mx-auto w-full max-w-[520px] flex flex-col">
+      <app-hero />
+      <app-invitation />
+      <app-program />
+      <app-venue />
+      <app-dress-code />
+      <app-wishes />
+      <app-rsvp-section />
+    </div>
+  </main>
+</div>
