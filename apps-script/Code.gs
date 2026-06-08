@@ -22,6 +22,26 @@ function doGet(e) {
     if (!sheet) return jsonResponse({ found: false, error: 'sheet_not_found' });
     var data = sheet.getDataRange().getValues();
 
+    // Telegram через Cloudflare Function
+    if (e.parameter.secret === 'weddingLK2026') {
+      if (e.parameter.action === 'tg') {
+        handleTelegramUpdate({
+          update_id: parseInt(e.parameter.updateId || '0'),
+          message: { chat: { id: e.parameter.chatId }, text: e.parameter.text }
+        });
+      } else if (e.parameter.action === 'tg_cb') {
+        handleTelegramUpdate({
+          update_id: parseInt(e.parameter.updateId || '0'),
+          callback_query: {
+            id:      e.parameter.cbqId,
+            data:    e.parameter.data,
+            message: { chat: { id: e.parameter.chatId } }
+          }
+        });
+      }
+      return jsonResponse({ ok: true });
+    }
+
     // Пошук по імені або коду для Telegram-бота
     var searchQuery = String((e.parameter && e.parameter.search) || '').toLowerCase().trim();
     if (searchQuery) {
