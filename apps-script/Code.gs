@@ -154,7 +154,28 @@ function handleTelegramUpdate(update) {
   var query  = msg.text.trim();
 
   if (query === '/start') {
-    sendTelegramMessage(chatId, 'Введіть ім\'я або код гостя для пошуку посилання.');
+    sendTelegramMessage(chatId, 'Введіть ім\'я або код гостя для пошуку посилання.\n/link — список гостей без посилання');
+    return;
+  }
+
+  if (query === '/link') {
+    var ssLink = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheetLink = ssLink.getSheetByName('Guests');
+    if (!sheetLink) {
+      sendTelegramMessage(chatId, 'Таблиця Guests не знайдена.');
+      return;
+    }
+    var dataLink = sheetLink.getDataRange().getValues();
+    var missing = [];
+    for (var k = 1; k < dataLink.length; k++) {
+      var colF = String(dataLink[k][5]).trim();
+      if (!colF) missing.push(String(dataLink[k][1]).trim());
+    }
+    if (missing.length === 0) {
+      sendTelegramMessage(chatId, 'У всіх гостей є посилання ✅');
+    } else {
+      sendTelegramMessage(chatId, 'Гості без посилання (' + missing.length + '):\n\n' + missing.join('\n'));
+    }
     return;
   }
 
