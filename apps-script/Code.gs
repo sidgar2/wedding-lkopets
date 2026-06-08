@@ -134,6 +134,11 @@ function getGreeting(name) {
 }
 
 function handleTelegramUpdate(update) {
+  var props    = PropertiesService.getScriptProperties();
+  var lastId   = parseInt(props.getProperty('last_update_id') || '0');
+  if (update.update_id <= lastId) return;
+  props.setProperty('last_update_id', String(update.update_id));
+
   var msg = update.message;
   if (!msg || !msg.text) return;
 
@@ -204,6 +209,10 @@ function sendTelegramMessage(chatId, text, parseMode) {
 
 function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function keepWarm() {
+  // тримає скрипт активним щоб уникнути cold start затримок
 }
 
 // Викликати один раз для реєстрації webhook
