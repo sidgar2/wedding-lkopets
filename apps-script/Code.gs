@@ -1,7 +1,7 @@
 // ── Заповніть ці константи перед деплоєм ──────────────────────────────────
-var SPREADSHEET_ID   = 'YOUR_SPREADSHEET_ID_HERE';
-var TELEGRAM_BOT_TOKEN = '';  // токен від @BotFather
-var TELEGRAM_CHAT_ID   = '';  // chat_id для RSVP-сповіщень
+var SPREADSHEET_ID   = '1vnq1qBfNckK1ZO22EM66DUPCvx34vzrCGzezyWzrf4M';
+var TELEGRAM_BOT_TOKEN = '8974707455:AAHVKFqQgfyZ9Ge5-AqRU02GMASlQZtDHwY';  // токен від @BotFather
+var TELEGRAM_CHAT_ID   = '391330540';  // chat_id для RSVP-сповіщень
 var SITE_URL           = 'https://wedding-invitation-liubomyr-maryana.uk';
 // ──────────────────────────────────────────────────────────────────────────
 
@@ -122,6 +122,17 @@ function doPost(e) {
 
 // ── Telegram bot ───────────────────────────────────────────────────────────
 
+function getGreeting(name) {
+  var words = name.toLowerCase().split(/\s+/);
+  var femaleNames = ['юля', 'оксана', 'лора', 'інна', 'софія'];
+  var maleNames   = ['саша'];
+  for (var i = 0; i < words.length; i++) {
+    if (femaleNames.indexOf(words[i]) !== -1) return 'Люба';
+    if (maleNames.indexOf(words[i])   !== -1) return 'Любий';
+  }
+  return 'Любі';
+}
+
 function handleTelegramUpdate(update) {
   var msg = update.message;
   if (!msg || !msg.text) return;
@@ -141,19 +152,18 @@ function handleTelegramUpdate(update) {
     return;
   }
 
-  var data    = sheet.getDataRange().getValues();
+  var data   = sheet.getDataRange().getValues();
   var results = [];
   var search  = query.toLowerCase();
 
   for (var i = 1; i < data.length; i++) {
     var rowCode = String(data[i][0]).toLowerCase().trim();
     var rowName = String(data[i][1]).toLowerCase().trim();
-    var colF    = String(data[i][5]).trim(); // колонка F
 
     if (rowCode === search || rowName.indexOf(search) !== -1) {
       results.push({
-        code:  String(data[i][0]).trim(),
-        label: colF || String(data[i][1]).trim(),
+        code: String(data[i][0]).trim(),
+        name: String(data[i][1]).trim(),
       });
     }
   }
@@ -163,12 +173,17 @@ function handleTelegramUpdate(update) {
     return;
   }
 
-  var lines = results.map(function(r) {
-    var url = SITE_URL + '/?code=' + encodeURIComponent(r.code);
-    return '<a href="' + url + '">' + escapeHtml(r.label) + '</a>';
+  var messages = results.map(function(r) {
+    var url      = SITE_URL + '/?code=' + encodeURIComponent(r.code);
+    var greeting = getGreeting(r.name);
+    return greeting + ' ' + escapeHtml(r.name) + '!\n' +
+      'З радістю запрошуємо вас стати частиною одного з важливих днів у нашому житті - нашого весілля💍\n' +
+      'Нижче ви знайдете наше весільне запрошення з усією необхідною інформацією.\n' +
+      'З нетерпінням чекаємо зустрічі та святкування разом з вами!\n\n' +
+      '<a href="' + url + '">Посилання</a>';
   });
 
-  sendTelegramMessage(chatId, lines.join('\n'), 'HTML');
+  sendTelegramMessage(chatId, messages.join('\n\n---\n\n'), 'HTML');
 }
 
 function sendTelegramMessage(chatId, text, parseMode) {
@@ -193,7 +208,7 @@ function escapeHtml(str) {
 
 // Викликати один раз для реєстрації webhook
 function setWebhook() {
-  var scriptUrl = ScriptApp.getService().getUrl();
+  var scriptUrl = ScriptApp.getService().getUrl().replace('/dev', '/exec');
   var res = UrlFetchApp.fetch(
     'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/setWebhook',
     {
