@@ -253,6 +253,7 @@ function handleTelegramUpdate(update) {
   });
 
   sendTelegramMessage(chatId, messages.join('\n\n---\n\n'), 'HTML');
+  refreshWebhook();
 }
 
 function sendTelegramMessage(chatId, text, parseMode) {
@@ -306,6 +307,23 @@ function escapeHtml(str) {
 }
 
 function keepWarm() {}
+
+function refreshWebhook() {
+  var scriptUrl = ScriptApp.getService().getUrl().replace('/dev', '/exec');
+  UrlFetchApp.fetch(
+    'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/deleteWebhook',
+    { method: 'post', contentType: 'application/json', payload: '{}', muteHttpExceptions: true }
+  );
+  UrlFetchApp.fetch(
+    'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/setWebhook',
+    {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ url: scriptUrl }),
+      muteHttpExceptions: true,
+    }
+  );
+}
 
 // Викликати кожну хвилину через тригер — замість webhook
 function processTelegramUpdates() {
