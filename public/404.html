@@ -1,0 +1,9 @@
+<!doctype html>
+<script>
+  var path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+  if (path) {
+    window.location.replace('/?code=' + encodeURIComponent(path));
+  } else {
+    window.location.replace('/');
+  }
+</script>
