@@ -219,21 +219,24 @@ function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function keepWarm() {
-  // тримає скрипт активним щоб уникнути cold start затримок
-}
+// Викликати кожну хвилину через тригер — замість webhook
+function processTelegramUpdates() {
+  var props  = PropertiesService.getScriptProperties();
+  var offset = parseInt(props.getProperty('telegram_offset') || '0');
 
-// Викликати один раз для реєстрації webhook
-function setWebhook() {
-  var scriptUrl = ScriptApp.getService().getUrl().replace('/dev', '/exec');
   var res = UrlFetchApp.fetch(
-    'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/setWebhook',
-    {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify({ url: scriptUrl }),
-      muteHttpExceptions: true,
-    }
+    'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/getUpdates?offset=' + offset + '&limit=10&timeout=0',
+    { muteHttpExceptions: true }
   );
-  Logger.log(res.getContentText());
+
+  var data = JSON.parse(res.getContentText());
+  if (!data.ok || !data.result || data.result.length === 0) return;
+
+  for (var i = 0; i < data.result.length; i++) {
+    var update = data.result[i];
+    handleTelegramUpdate(update);
+    if (update.update_id >= offset) offset = update.update_id + 1;
+  }
+
+  props.setProperty('telegram_offset', String(offset));
 }
