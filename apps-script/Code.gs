@@ -123,10 +123,37 @@ function getGreeting(name) {
   var femaleNames = ['юля', 'оксана', 'лора', 'інна', 'софія'];
   var maleNames   = ['саша'];
   for (var i = 0; i < words.length; i++) {
-    if (femaleNames.indexOf(words[i]) !== -1) return 'Люба';
-    if (maleNames.indexOf(words[i])   !== -1) return 'Любий';
+    if (femaleNames.indexOf(words[i]) !== -1) return 'Дорога';
+    if (maleNames.indexOf(words[i])   !== -1) return 'Дорогий';
   }
-  return 'Любі';
+  return 'Дорогі';
+}
+
+function getVas(name) {
+  var words = name.toLowerCase().split(/\s+/);
+  var names = ['юля', 'лора', 'інна', 'софія', 'саша'];
+  for (var i = 0; i < words.length; i++) {
+    if (names.indexOf(words[i]) !== -1) return 'тебе';
+  }
+  return 'вас';
+}
+
+function getZnaidete(name) {
+  var words = name.toLowerCase().split(/\s+/);
+  var names = ['юля', 'лора', 'інна', 'софія', 'саша'];
+  for (var i = 0; i < words.length; i++) {
+    if (names.indexOf(words[i]) !== -1) return 'ти знайдеш';
+  }
+  return 'ви знайдете';
+}
+
+function getVamy(name) {
+  var words = name.toLowerCase().split(/\s+/);
+  var names = ['юля', 'лора', 'інна', 'софія', 'саша'];
+  for (var i = 0; i < words.length; i++) {
+    if (names.indexOf(words[i]) !== -1) return 'тобою';
+  }
+  return 'вами';
 }
 
 function handleMessage(chatId, text) {
@@ -145,7 +172,7 @@ function handleMessage(chatId, text) {
     var data = sheet.getDataRange().getValues();
     var missing = [];
     for (var k = 1; k < data.length; k++) {
-      var colF  = String(data[k][5]).trim();
+      var colF  = String(data[k][4]).trim();
       var nameF = String(data[k][1]).trim();
       var codeF = String(data[k][0]).trim();
       if (!colF && nameF && codeF) missing.push({ name: nameF, code: codeF });
@@ -183,10 +210,13 @@ function handleMessage(chatId, text) {
   var messages = results.map(function(r) {
     var url      = SITE_URL + '/?code=' + encodeURIComponent(r.code);
     var greeting = getGreeting(r.name);
+    var vas = getVas(r.name);
+    var znaidete = getZnaidete(r.name);
+    var vamy = getVamy(r.name);
     return greeting + ' ' + escapeHtml(r.name) + '!\n' +
-      'З радістю запрошуємо вас стати частиною одного з важливих днів у нашому житті - нашого весілля💍\n' +
-      'Нижче ви знайдете наше весільне запрошення з усією необхідною інформацією.\n' +
-      'З нетерпінням чекаємо зустрічі та святкування разом з вами!\n\n' +
+      'З радістю запрошуємо ' + vas + ' стати частиною одного з важливих днів у нашому житті - нашого весілля💍\n' +
+      'Нижче ' + znaidete + ' наше весільне запрошення з усією необхідною інформацією.\n' +
+      'З нетерпінням чекаємо зустрічі та святкування разом з ' + vamy + '!\n\n' +
       '<a href="' + url + '">Посилання</a>';
   });
 
@@ -213,12 +243,15 @@ function handleCallbackQuery(chatId, cbqId, code) {
 
   var url      = SITE_URL + '/?code=' + encodeURIComponent(found.code);
   var greeting = getGreeting(found.name);
+  var vas = getVas(found.name);
+  var znaidete = getZnaidete(found.name);
+  var vamy = getVamy(found.name);
   sendTelegramMessage(chatId,
     greeting + ' ' + escapeHtml(found.name) + '!\n' +
-    'З радістю запрошуємо вас стати частиною одного з важливих днів у нашому житті - нашого весілля💍\n' +
-    'Нижче ви знайдете наше весільне запрошення з усією необхідною інформацією.\n' +
-    'З нетерпінням чекаємо зустрічі та святкування разом з вами!\n\n' +
-    '<a href="' + url + '">Посилання</a>',
+        'З радістю запрошуємо ' + vas + ' стати частиною одного з важливих днів у нашому житті - нашого весілля💍\n' +
+        'Нижче ' + znaidete + ' наше весільне запрошення з усією необхідною інформацією.\n' +
+        'З нетерпінням чекаємо зустрічі та святкування разом з ' + vamy + '!\n\n' +
+        '<a href="' + url + '">Посилання</a>',
     'HTML'
   );
 }
